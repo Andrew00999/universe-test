@@ -1,15 +1,25 @@
 ---
+import Layout from "../layouts/Layout.astro";
+import axios from "axios";
+
+async function fetchData() {
+    try {
+        const response = await axios.get("http://127.0.0.1:1337/api/test");
+
+        if (response.status === 200) {
+            const data = await response.data;
+            return data;
+        } else {
+            throw new Error("Axios error: " + response.status);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+const data = await fetchData();
+console.log(data?.data);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout>
+    <h2>{data?.data?.attributes?.field}</h2>
+</Layout>
